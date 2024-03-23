@@ -88,9 +88,18 @@ export const joinRoom = initGuard(occupiedRooms, (config, ns) => {
     const errMsg = val['failure reason']
 
     if (errMsg) {
-      console.warn(
-        `${libName}: torrent tracker failure from ${socket.url} - ${errMsg}`
-      )
+      if(errMsg === 'Relaying'){
+        if(val['relay']){
+          const relayMsg = val['relay']
+          if(!relayUrls.includes(relayMsg)){
+            relayUrls.push(relayMsg)
+            await onRelayUrl(relayMsg, infoHash)
+          }
+        } else {
+          console.log(`${socket.url} tried to relay us to another tracker but culdn't find another tracker for us`)
+        }
+      }
+      console.warn(`${libName}: torrent tracker failure from ${socket.url} - ${errMsg}`)
       return
     }
 
@@ -243,6 +252,16 @@ export const joinRoom = initGuard(occupiedRooms, (config, ns) => {
         announce(await makeSocket(url, infoHash, true), infoHash)
       }
     })
+  }
+
+  const onRelayUrl = async (url, infoHash) => {
+    const socket = await makeSocket(url, infoHash)
+
+    if (socket.readyState === WebSocket.OPEN) {
+      announce(socket, infoHash)
+    } else if (socket.readyState !== WebSocket.CONNECTING) {
+      announce(await makeSocket(url, infoHash, true), infoHash)
+    }
   }
 
   const cleanPool = () => {
