@@ -30,7 +30,7 @@
     "firebase": "^10.6.0",
     "libp2p": "^1.2.1",
     "mqtt": "^5.3.5",
-    "simple-peer-light": "^9.10.0"
+    "simple-peer-light": "github:ducksandgoats/simple-peer-light"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
