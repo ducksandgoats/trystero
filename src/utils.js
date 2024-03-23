@@ -3,7 +3,7 @@ import Peer from 'simple-peer-light'
 const charSet = '0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz'
 
 export const initPeer = (initiator, trickle, config) => {
-  const peer = new Peer({initiator, trickle, config})
+  const peer = new Peer({...config, initiator, trickle})
   const onData = data => peer.__earlyDataBuffer.push(data)
 
   peer.on(events.data, onData)

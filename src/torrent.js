@@ -61,7 +61,7 @@ export const joinRoom = initGuard(occupiedRooms, (config, ns) => {
       Array(howMany)
         .fill()
         .map(() => {
-          const peer = initPeer(true, false, config.rtcConfig)
+          const peer = initPeer(true, false, config.session)
 
           return [
             genId(hashLimit),
@@ -120,7 +120,7 @@ export const joinRoom = initGuard(occupiedRooms, (config, ns) => {
 
       handledOffers[val.offer_id] = true
 
-      const peer = initPeer(false, false, config.rtcConfig)
+      const peer = initPeer(false, false, config.session)
 
       peer.once(events.signal, async answer =>
         socket.send(
